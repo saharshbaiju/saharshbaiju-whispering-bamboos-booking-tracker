@@ -4,16 +4,24 @@ import { JWT } from 'google-auth-library';
 // Helper to clean the key
 function getCleanKey(key: string | undefined): string | undefined {
     if (!key) return undefined;
-    // Handle both literal \n and string newlines
+
+    // 1. Unescape literal \n
     let cleaned = key.replace(/\\n/g, '\n');
 
-    // Ensure the key starts and ends correctly
-    if (!cleaned.startsWith('-----BEGIN PRIVATE KEY-----')) {
-        // sometimes people paste just the base64
-        cleaned = `-----BEGIN PRIVATE KEY-----\n${cleaned}\n-----END PRIVATE KEY-----`;
+    // 2. Remove existing headers/footers to access raw base64
+    cleaned = cleaned.replace(/-----BEGIN PRIVATE KEY-----/g, '').replace(/-----END PRIVATE KEY-----/g, '');
+
+    // 3. Remove all whitespace (newlines, spaces)
+    cleaned = cleaned.replace(/\s+/g, '');
+
+    // 4. Rebuild cleanly with 64-char lines (standard PEM format)
+    const chunkSize = 64;
+    const body: string[] = [];
+    for (let i = 0; i < cleaned.length; i += chunkSize) {
+        body.push(cleaned.slice(i, i + chunkSize));
     }
 
-    return cleaned;
+    return `-----BEGIN PRIVATE KEY-----\n${body.join('\n')}\n-----END PRIVATE KEY-----\n`;
 }
 
 const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -22,15 +30,7 @@ const PRIVATE_KEY = getCleanKey(RAW_KEY);
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 export async function getSheet() {
-    console.log('Connecting to Google Sheets...');
-    console.log('Email:', SERVICE_ACCOUNT_EMAIL);
-    console.log('Sheet ID:', SHEET_ID);
-    console.log('Private Key length:', PRIVATE_KEY?.length);
-    console.log('Private Key start:', PRIVATE_KEY?.substring(0, 35));
-    console.log('Private Key contains newlines:', PRIVATE_KEY?.includes('\n'));
-
     if (!SERVICE_ACCOUNT_EMAIL || !PRIVATE_KEY || !SHEET_ID) {
-        console.error('Missing credentials');
         throw new Error('Google Sheets credentials missing');
     }
 
