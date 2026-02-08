@@ -9,7 +9,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         let sheet = doc.sheetsByTitle['Bookings'];
 
         if (!sheet) {
-            sheet = await doc.addSheet({ title: 'Bookings', headerValues: ['date', 'name', 'mobile', 'description'] });
+            return res.status(500).json({ message: 'Bookings sheet missing in Google Sheet' });
         }
 
         if (req.method === 'GET') {

@@ -13,11 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const sheet = doc.sheetsByTitle['Users'];
 
         if (!sheet) {
-            // If sheet doesn't exist, create it with header row
-            const newSheet = await doc.addSheet({ title: 'Users', headerValues: ['username', 'password'] });
-            // Add default admin user if creating fresh
-            await newSheet.addRow({ username: 'admin', password: 'password123' });
-            return res.status(401).json({ message: 'User not found (Sheet initialized)' });
+            return res.status(500).json({ message: 'Users sheet missing in Google Sheet' });
         }
 
         const rows = await sheet.getRows();

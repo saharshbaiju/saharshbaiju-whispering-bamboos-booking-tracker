@@ -17,7 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         let sheet = doc.sheetsByTitle['Users'];
 
         if (!sheet) {
-            sheet = await doc.addSheet({ title: 'Users', headerValues: ['username', 'password'] });
+            return res.status(500).json({ message: 'Users sheet missing in Google Sheet' });
         }
 
         const rows = await sheet.getRows();
