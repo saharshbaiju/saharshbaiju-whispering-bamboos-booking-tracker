@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { UserPlus } from 'lucide-react';
-import { getUsers, addUser } from '../services/mockData';
+import { signupUser } from '../services/api';
 import './Auth.css';
 
 interface SignupProps {
@@ -33,21 +33,11 @@ function Signup({ onLogin }: SignupProps) {
         setLoading(true);
 
         try {
-            const users = await getUsers();
-            const exists = users.some(
-                u => u.username.toLowerCase() === username.toLowerCase()
-            );
-
-            if (exists) {
-                setError('Username already taken');
-                setLoading(false);
-                return;
-            }
-
-            await addUser({ username, password });
+            await signupUser({ username, password });
             onLogin(username);
-        } catch {
-            setError('Signup failed. Please try again.');
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || 'Signup failed. Username might be taken.');
         } finally {
             setLoading(false);
         }

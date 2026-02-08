@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, ChevronLeft, ChevronRight, X, User, Phone, FileText, Calendar } from 'lucide-react';
-import { getBookingsByMonth, addBooking, cancelBooking, getBookingByDate } from '../services/mockData';
+import { getBookingsByMonth, addBooking, cancelBooking, getBookingByDate } from '../services/api';
 import type { Booking } from '../types';
 import './Dashboard.css';
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LogIn } from 'lucide-react';
-import { getUsers } from '../services/mockData';
+import { loginUser } from '../services/api';
 import './Auth.css';
 
 interface LoginProps {
@@ -21,18 +21,13 @@ function Login({ onLogin }: LoginProps) {
         setLoading(true);
 
         try {
-            const users = await getUsers();
-            const user = users.find(
-                u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
-            );
-
+            const user = await loginUser(username, password);
             if (user) {
                 onLogin(user.username);
-            } else {
-                setError('Invalid username or password');
             }
-        } catch {
-            setError('Login failed. Please try again.');
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || 'Login failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }

@@ -152,8 +152,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.1) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.3);
     border-radius: var(--radius-md);
     font-size: 1rem;
     font-weight: 500;
@@ -179,8 +179,8 @@
 }
 
 .calendar-day:hover {
-    background: var(--color-bg-tertiary);
-    border-color: var(--color-border-hover);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(22, 163, 74, 0.15) 100%);
+    border-color: rgba(34, 197, 94, 0.5);
     transform: scale(1.03);
 }
 
@@ -192,23 +192,25 @@
 
 .calendar-day.empty:hover {
     transform: none;
+    background: transparent;
 }
 
 .calendar-day.today {
     border-color: var(--color-accent);
     border-width: 2px;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
 }
 
-/* Booked dates - Reddish gradient */
+/* Booked dates - Red gradient */
 .calendar-day.booked {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.2) 100%);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.35) 0%, rgba(185, 28, 28, 0.25) 100%);
     border-color: #ef4444;
     color: #fca5a5;
     font-weight: 600;
 }
 
 .calendar-day.booked:hover {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.4) 0%, rgba(220, 38, 38, 0.3) 100%);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.45) 0%, rgba(185, 28, 28, 0.35) 100%);
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
 }
 
@@ -399,26 +401,27 @@
         display: none;
     }
 
+    /* 4 columns for bigger tiles on mobile */
     .calendar-grid {
-        flex: 1;
-        gap: 4px;
-        align-content: stretch;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
     }
 
     /* Show day labels inside tiles on mobile */
     .day-weekday {
         display: block;
+        font-size: 0.65rem;
     }
 
     .day-number {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
 
     .calendar-day {
-        min-height: 0;
-        aspect-ratio: auto;
-        padding: 8px 2px;
-        border-radius: var(--radius-sm);
+        min-height: 60px;
+        aspect-ratio: 1;
+        padding: 6px;
+        border-radius: var(--radius-md);
     }
 
     .calendar-day.booked::after {
