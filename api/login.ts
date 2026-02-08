@@ -30,6 +30,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
     } catch (error) {
         console.error('Login error:', error);
-        return res.status(500).json({ message: 'Internal server error', error: String(error) });
+        return res.status(500).json({
+            message: error instanceof Error ? error.message : 'Internal server error',
+            error: String(error)
+        });
     }
 }
